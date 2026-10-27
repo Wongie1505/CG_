@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>For you</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fdf2f4;
+      font-family: system-ui, sans-serif;
+      text-align: center;
+    }
+
+    .card {
+      background: #fff;
+      padding: 40px 28px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      max-width: 340px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin: 0 0 12px;
+    }
+
+    p {
+      color: #555;
+      line-height: 1.5;
+      margin: 0 0 28px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .yes {
+      background: #e0446a;
+      color: #fff;
+    }
+
+    .no {
+      background: #f0f0f0;
+      color: #444;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Hey you 👋</h1>
+    <p>I miss you, and I'd love to hang out with you for a few hours tonight. What do you say?</p>
+
+    <button class="btn yes" onclick="reply('YES: tonight works for me 😊')">
+      Yes, let's do it
+    </button>
+
+    <button class="btn no" onclick="reply('NO: not tonight, but soon maybe?')">
+      Not tonight
+    </button>
+  </div>
+
+  <script>
+    // Paste your Web3Forms access key here
+    const ACCESS_KEY = "YOUR_ACCESS_KEY";
+
+    async function reply(answer) {
+      const card = document.querySelector(".card");
+
+      try {
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            access_key: ACCESS_KEY,
+            subject: "Her answer: " + answer,
+            message: answer
+          })
+        });
+
+        // Treat a non-OK response as a failure too
+        if (!res.ok) throw new Error("Request failed");
+
+        card.innerHTML = "<h1>Sent 💌</h1><p>Got your answer. Talk soon.</p>";
+      } catch (err) {
+        card.innerHTML = "<h1>Oops</h1><p>Something broke. Just text me your answer 😅</p>";
+      }
+    }
+  </script>
+</body>
+</html>
